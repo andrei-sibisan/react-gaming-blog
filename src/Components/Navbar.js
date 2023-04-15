@@ -4,7 +4,32 @@ function Year({ year, months }) {
       <span>{year}</span>
       <ul>
         {months.map((month) => (
-          <li>{month + 1}</li>
+          <li>{month}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Month({ month, days }) {
+  return (
+    <div className="nav-month">
+      <span>{month}</span>
+      <ul>
+        {days.map((day) => (
+          <li>{day}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function Day({ articleTitles }) {
+  return (
+    <div className="nav-article-titles">
+      <ul>
+        {articleTitles.map((title) => (
+          <li>{title}</li>
         ))}
       </ul>
     </div>
@@ -25,6 +50,8 @@ function Navbar({ articles }) {
   const yearsUnique = [...yearsSet];
 
   for (let i = 0; i < yearsUnique.length; i++) {
+    let monthsElemArray = [];
+
     let monthsTemp = [];
     for (let j = 0; j < articles.length; j++) {
       let date = new Date(articles[j].date);
@@ -35,7 +62,46 @@ function Navbar({ articles }) {
     }
     const monthsSet = new Set(monthsTemp);
     const monthsUnique = [...monthsSet];
-    yearsElemArray.push(<Year year={yearsUnique[i]} months={monthsUnique} />);
+
+    for (let k = 0; k < monthsUnique.length; k++) {
+      let daysElemArray = [];
+
+      let daysTemp = [];
+      for (let l = 0; l < articles.length; l++) {
+        let date = new Date(articles[l].date);
+        console.log("Dates are: ", date);
+        let month = date.getMonth();
+        if (monthsUnique[k] === month) {
+          daysTemp.push(date.getDate());
+          console.log("Days are: ", date.getDay());
+        }
+      }
+      const daysSet = new Set(daysTemp);
+      const daysUnique = [...daysSet];
+
+      for (let m = 0; m < daysUnique.length; m++) {
+        let articleTitles = [];
+        for (let n = 0; n < articles.length; n++) {
+          let date = new Date(articles[n].date);
+          if (
+            date.getFullYear() === yearsUnique[i] &&
+            date.getMonth() === monthsUnique[k] &&
+            date.getDate() === daysUnique[m]
+          ) {
+            articleTitles.push(articles[n].title);
+          }
+        }
+        daysElemArray.push(<Day articleTitles={articleTitles} />);
+      }
+
+      monthsElemArray.push(
+        <Month month={monthsUnique[k] + 1} days={daysElemArray} />
+      );
+    }
+
+    yearsElemArray.push(
+      <Year year={yearsUnique[i]} months={monthsElemArray} />
+    );
   }
 
   return (
