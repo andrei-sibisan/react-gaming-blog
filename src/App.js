@@ -1,3 +1,5 @@
+import { Routes, Route } from "react-router-dom";
+
 import Header from "./Components/Header";
 import Navbar from "./Components/Navbar";
 import Article from "./Components/Article";
@@ -10,7 +12,12 @@ function App() {
     <div className="App">
       <Header />
       <Navbar articles={articles} />
-      <Article />
+      <Routes>
+        <Route
+          path="articles/:articleTitle"
+          element={<Article articles={articles} />}
+        />
+      </Routes>
       <Footer />
     </div>
   );

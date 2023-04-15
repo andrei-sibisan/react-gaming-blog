@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Year({ year, months }) {
   return (
     <div className="nav-year">
@@ -24,12 +26,15 @@ function Month({ month, days }) {
   );
 }
 
-function Day({ articleTitles }) {
+function Day({ day, articleTitles }) {
   return (
     <div className="nav-article-titles">
+      <span>{day}</span>
       <ul>
         {articleTitles.map((title) => (
-          <li>{title}</li>
+          <li>
+            <Link to={`articles/${title}`}>{title}</Link>
+          </li>
         ))}
       </ul>
     </div>
@@ -91,7 +96,9 @@ function Navbar({ articles }) {
             articleTitles.push(articles[n].title);
           }
         }
-        daysElemArray.push(<Day articleTitles={articleTitles} />);
+        daysElemArray.push(
+          <Day day={daysUnique[m]} articleTitles={articleTitles} />
+        );
       }
 
       monthsElemArray.push(
